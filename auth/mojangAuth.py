@@ -1,4 +1,5 @@
 import json
+
 import requests
 
 
@@ -49,9 +50,12 @@ def check_access_token_is_vaild(access_token: str, *client_token: str):
                                    headers=headers).status_code == 200 else False
     return result
 
-def refresh_access_token():
+
+def refresh_access_token(access_token, client_token):
     api_address = "https://authserver.mojang.com/refresh"  # 固定请求地址
     headers = {"Content-Type": "application/json"}  # 固定请求头
+    refresh_data = dict(accessToken=access_token, clientToken=client_token)
+    return requests.post(url=api_address, data=json.dumps(refresh_data), headers=headers)
 
 
 if __name__ == '__main__':
