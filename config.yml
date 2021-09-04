@@ -1,0 +1,5 @@
+clientToken:
+# 为空则不使用 clientToken
+# 此时您仍然可以正常登陆，但每次登陆时需要手动输入账号和密码
+auto_generate_clientToken: True
+# 如果不想在 clientToken 为空时自动生成，请设置为 False
