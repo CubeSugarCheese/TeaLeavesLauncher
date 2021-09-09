@@ -1,5 +1,10 @@
-# TeaLeavesLauncher
+<div align="center">
+<img width="95" src="icon.png" alt="title">
+<h1>TeaLeavesLauncher</h1>
+</div>
+
 A mc launcher based on python
+
 # 分支说明
 该分支用于提交正式版文件
 # Todo List
