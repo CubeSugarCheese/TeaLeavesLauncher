@@ -1,6 +1,7 @@
-# TeaLeavesLauncher
-
+<div style="text-align: center;">
 <img width="95" src="icon.png" alt="title">
+<h1>TeaLeavesLauncher</h1>
+</div>
 
 A mc launcher based on python
 
