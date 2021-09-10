@@ -4,9 +4,11 @@ import requests
 
 
 class MojangAccount:
-    accessToken: str
+    mc_accessToken: str
     username: str
     password: str
+    uuid: str
+    name: str
 
     def __init__(self, username: str, password: str, *client_token: str):
         """
@@ -16,6 +18,10 @@ class MojangAccount:
         self.username = username
         self.password = password
         self.client_token = client_token
+        self.auth_data = self._get_authenticate().json()
+        self.mc_accessToken = self.auth_data["accessToken"]
+        self.uuid = self.auth_data["selectedProfile"]["id"]
+        self.name = self.auth_data["selectedProfile"]["name"]
 
     def _get_authenticate(self):
         api_address = "https://authserver.mojang.com/authenticate"  # 固定请求地址
@@ -39,7 +45,7 @@ class MojangAccount:
         return json.loads(authenticate.text)["access_token"]
 
 
-def check_access_token_is_vaild(access_token: str, *client_token: str):
+def check_access_token_is_available(access_token: str, *client_token: str):
     api_address = "https://authserver.mojang.com/validate"  # 固定请求地址
     headers = {"Content-Type": "application/json"}  # 固定请求头
     if client_token is not None:

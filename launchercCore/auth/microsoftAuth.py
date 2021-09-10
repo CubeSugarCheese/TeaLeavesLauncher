@@ -32,11 +32,11 @@ class MicrosoftAccount:
         self.xsts_data = self._get_xsts_authenticate().json()
         self.xsts_token = self.xsts_data["Token"]
         self.mc_auth_data = self._get_mc_authenticate().json()
-        self.mc_access_token = self.mc_auth_data["access_token"]
+        self.mc_access_token = self.mc_auth_data["access_token"]  # 登录游戏必需参数
         self.is_game_exist = self._check_game_exist()
         self.mc_profile = self._get_mc_profile().json()
-        self.uuid = self.mc_profile["id"]
-        self.name = self.mc_profile["name"]
+        self.uuid = self.mc_profile["id"]  # 登录游戏必需参数
+        self.name = self.mc_profile["name"]  # 登录游戏必需参数
 
     def _get_authenticate(self):
         api_address = "https://login.live.com/oauth20_token.srf"
@@ -107,4 +107,3 @@ class MicrosoftAccount:
         headers = {"Authorization": f"Bearer {self.mc_access_token}"}
         game_profile = requests.get(url=api_address, headers=headers)
         return game_profile
-
