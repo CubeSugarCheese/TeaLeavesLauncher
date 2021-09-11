@@ -1,15 +1,17 @@
 clientToken:
 # 为空则不使用 clientToken
-# 此时您仍然可以正常登陆，但每次登陆时需要手动输入账号和密码
+# 此时您仍然可以正常登录 Mojang 账号，但每次登陆时需要手动输入账号和密码
 auto_generate_clientToken: True
 # 如果不想在 clientToken 为空时自动生成，请设置为 False
 max_memory: 4096
-min_memory: 512
-# 设置 mc 最大和最小内存占用
+# 设置 mc 最大内存占用
 # 此处为全局设置，您可以为每个游戏版本单独设置
 java_path:
-  - "C:\Program Files\OpenJDK\bin\java.exe"
+  - "C:\Program Files\OpenJDK\bin\javaw.exe"
 # 您暂时需要手动设定 Java 路径
 # like："C:\Program Files\OpenJDK\bin\java.exe"
 MC_path:
-  - ""
+  - "C:\Users\2026\Downloads\Programs\bakaxl\.minecraft"
+launcher_version: dev
+# 此处需要在 merge 前检查是否需要更新
+# 用于在游戏中显示版本号，可能会有其他用途
