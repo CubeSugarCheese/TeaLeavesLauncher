@@ -1,0 +1,78 @@
+name: Nuitka tests
+
+on:
+  pull_request:
+    branches: 
+      - dev
+  push:
+    branches: 
+      - dev
+    tags: 'v0.1.*-pre'
+
+jobs:
+  linux:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@dev
+
+    - name: Use Python 3.7.4
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.7.4
+
+    - name: Install dependencies
+      run: |
+        pip install nuitka
+
+    - name: Build with nuitka
+      run: python -m nuitka
+
+    - name: Run tests
+      run: ...
+
+  mac:
+    runs-on: macOS-latest
+    steps:
+    - uses: actions/checkout@dev
+
+    - name: Install Python 3.7.4 using Conda
+      run: |
+        sudo chown -R $USER $CONDA
+        $CONDA/bin/conda install python=3.7.4
+
+    - name: Install dependencies
+      run: |
+        pip install nuitka
+
+    - name: Build with nuitka
+      run: python -m nuitka
+
+    - name: Run tests
+      run: ...
+
+  windows:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@dev
+
+    - name: Use Python 3.7.4
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.7.4
+
+    - name: Install MinGW using Conda
+      shell: bash
+      run: $CONDA/Scripts/conda install m2w64-gcc libpython
+
+    - name: Install dependencies with pipenv
+      shell: bash
+      run: |
+        pip install nuitka
+
+    - name: Build with nuitka
+      shell: bash
+      run: CC=$CONDA/Library/mingw-w64/bin/gcc.exe pipenv run build
+
+    - name: Run tests
+      shell: bash
+      run: ...
