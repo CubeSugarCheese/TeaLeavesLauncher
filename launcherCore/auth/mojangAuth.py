@@ -10,14 +10,15 @@ class MojangAccount:
     uuid: str
     name: str
 
-    def __init__(self, username: str, password: str, *client_token: str):
+    def __init__(self, username: str, password: str, client_token: str = None):
         """
         :param username: mojang帐号电子邮箱地址或玩家名
         :param password: mojang帐号密码
         """
         self.username = username
         self.password = password
-        self.client_token = client_token
+        if client_token is not None:
+            self.client_token = client_token
         self.auth_data = self._get_authenticate().json()
         self.mc_accessToken = self.auth_data["accessToken"]
         self.uuid = self.auth_data["selectedProfile"]["id"]

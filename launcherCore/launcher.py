@@ -13,10 +13,10 @@ class Launcher:
     uuid: str
     name: str
     mc_access_token: str
-    launcher_version: str = "dev"
+    launcher_version: str
     user_type: str
-    width: int
-    height: int
+    width: int = 480
+    height: int = 840
 
     def __init__(self,
                  mc_path: str,
@@ -25,17 +25,13 @@ class Launcher:
                  name: str,
                  mc_access_token=None,
                  java_path: str = find_java_from_where(),
-                 max_memory=2048,
-                 width=840,
-                 height=480
+                 max_memory=2048
                  ):
         self.mc_path = mc_path
         self.version = version
         self.uuid = uuid
         self.name = name
         self.java_path = java_path
-        self.width = width
-        self.height = height
         self.max_memory = max_memory
         if mc_access_token is not None:
             self.user_type = "Mojang"
@@ -45,6 +41,8 @@ class Launcher:
         self.version_json_path = f"{self.mc_path}\\versions\\{self.version}\\{self.version}.json"
         self.natives_folder_path = f"{self.mc_path}\\versions\\{self.version}\\natives"
         self.asset_index = self._load_version_json()["assetIndex"]["id"]
+        import launcherInfo
+        self.launcher_version = launcherInfo.launcher_version
 
     def _load_version_json(self):
         with open(self.version_json_path, "r", encoding="utf-8") as f:
@@ -65,7 +63,7 @@ class Launcher:
         return jar_paths
 
     def _generate_launch_parameter(self):
-        part_X = f"java -Xmx{self.max_memory}M -XX:+UseG1GC -XX:-UseAdaptiveSizePolicy -XX:-OmitStackTraceInFastThrow "
+        part_X = f"\"{self.java_path}\" -Xmx{self.max_memory}M -XX:+UseG1GC -XX:-UseAdaptiveSizePolicy -XX:-OmitStackTraceInFastThrow "
         part_D = f"-Dminecraft.launcher.brand=tea-leaves-launcher -Dminecraft.launcher.version={self.launcher_version} -Djava.library.path={self.natives_folder_path} "
         part_cp = f"-cp \"{self._generate_libraries_parameter()}{self.mc_path}\\versions\\{self.version}\\{self.version}.jar\" "
         part_class = f"net.minecraft.client.main.Main "
@@ -86,14 +84,3 @@ class Launcher:
         import subprocess
         subprocess.run(cmd)
 
-
-if __name__ == "__main__":
-    testLauncher = Launcher(
-        mc_path=r"C:\Users\2026\Downloads\Programs\bakaxl\.minecraft",
-        name="Cubesugarcheese",
-        uuid="55eff3377c554216844686450b4b3fef",
-        #        mc_access_token="",
-        version="1.16.5"
-    )
-    print(testLauncher._generate_launch_parameter())
-    testLauncher.launch_game()
