@@ -47,8 +47,11 @@ class Launcher:
         else:
             self.user_type = "Legacy"
         self.modloader_json_paths = self._get_modloader_json_paths()
-        with open(self.modloader_json_paths[0], "r", encoding="utf-8") as f:
-            self.mc_version = json.loads(f.read())["inheritsFrom"]
+        if self.modloader_json_paths:
+            with open(self.modloader_json_paths[0], "r", encoding="utf-8") as f:
+                self.mc_version = json.loads(f.read())["inheritsFrom"]
+        else:
+            self.mc_version = version
         self.version_json_path = f"{self.mc_path}\\versions\\{self.version}\\{self.mc_version}.json"
         self.natives_folder_path = f"{self.mc_path}\\versions\\{self.version}\\natives"
         self.asset_index = self._load_version_json()["assetIndex"]["id"]
