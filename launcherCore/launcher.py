@@ -7,7 +7,7 @@ from launcherCore.utils import launcherInfo
 
 
 class Launcher:
-    version_json_path: str
+    vanilla_json_path: str
     natives_folder_path: str
     max_memory: int
     java_path: str
@@ -47,24 +47,40 @@ class Launcher:
         else:
             self.user_type = "Legacy"
         self.modloader_json_paths = self._get_modloader_json_paths()
-        if self.modloader_json_paths:
-            with open(self.modloader_json_paths[0], "r", encoding="utf-8") as f:
-                self.mc_version = json.loads(f.read())["inheritsFrom"]
-        else:
-            self.mc_version = version
-        self.version_json_path = f"{self.mc_path}\\versions\\{self.version}\\{self.mc_version}.json"
+        self.mc_version = self._get_mc_version()
+        self.vanilla_json_path = self._get_vanilla_json_path()
         self.natives_folder_path = f"{self.mc_path}\\versions\\{self.version}\\natives"
-        self.asset_index = self._load_version_json()["assetIndex"]["id"]
+        self.asset_index = self._load_vanilla_json()["assetIndex"]["id"]
         self.launcher_version = launcherInfo.launcher_version
-
         ML_finder = ModloaderFinder(self.modloader_json_paths)
         self.liteloader = ML_finder.isLiteloader()
         self.forge = ML_finder.isForge()
         self.fabric = ML_finder.isFabric()
 
-    def _load_version_json(self):
-        with open(self.version_json_path, "r", encoding="utf-8") as f:
+    def _load_vanilla_json(self):
+        with open(self.vanilla_json_path, "r", encoding="utf-8") as f:
             return json.loads(f.read())
+
+    def _get_mc_version(self):
+        if self.modloader_json_paths:
+            with open(self.modloader_json_paths[0], "r", encoding="utf-8") as f:
+                mc_version = json.loads(f.read())["inheritsFrom"]
+        else:
+            with open(self._get_vanilla_json_path(), "r", encoding="utf-8") as f:
+                vanilla_json = json.loads(f.read())
+                mc_version = vanilla_json["id"]
+        return mc_version
+
+    def _get_vanilla_json_path(self):
+        version_dir = f"{self.mc_path}\\versions\\{self.version}"  # 文件夹名称
+        for i in os.listdir(version_dir):  # 遍历整个文件夹
+            path = os.path.join(version_dir, i)
+            if os.path.isfile(path):  # 判断是否为一个文件，排除文件夹
+                if os.path.splitext(path)[1] == ".json":  # 判断文件扩展名是否为“.json”
+                    json_path = f"{self.mc_path}\\versions\\" + self.version + "\\" + i
+                    with open(json_path, "r", encoding="utf-8") as f:
+                        if f.read().find("net.minecraft.client.main.Main") != -1:
+                            return json_path
 
     def _get_modloader_json_paths(self):
         version_dir = f"{self.mc_path}\\versions\\{self.version}"  # 文件夹名称
@@ -75,15 +91,15 @@ class Launcher:
                 if os.path.splitext(path)[1] == ".json":  # 判断文件扩展名是否为“.json”
                     json_list.append(f"{self.mc_path}\\versions\\" + self.version + "\\" + i)
         modloader_json_path = []
-        for i in json_list:
-            with open(i, "r", encoding="utf8") as f:
+        for j in json_list:
+            with open(j, "r", encoding="utf8") as f:
                 if "inheritsFrom" in json.loads(f.read()):
-                    modloader_json_path.append(i)
+                    modloader_json_path.append(j)
         return modloader_json_path
 
     def _generate_vanilla_libraries_parameter(self):
         jar_paths = ""
-        for i in self._load_version_json()["libraries"]:
+        for i in self._load_vanilla_json()["libraries"]:
             if "classifiers" not in i["downloads"]:
                 libraries_parts = i["name"].split(":")
                 # "com.mojang:patchy:1.1" => ["com.mojang","patchy","1.1"]
