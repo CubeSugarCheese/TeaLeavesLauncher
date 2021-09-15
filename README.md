@@ -21,7 +21,7 @@ A mc launcher based on python
     
 
 - [ ] 完整账户支持：
-    - [ ] 离线登陆
+    - [x] 离线登陆
     - [x] mojang 账户（ Yggdrasil ）
     - [x] 微软账户
     - [ ] Authlib-injector

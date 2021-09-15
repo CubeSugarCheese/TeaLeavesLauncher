@@ -1,1 +1,1 @@
-launcher_version = "dev"
+launcher_version = "0.1.0-pre"
