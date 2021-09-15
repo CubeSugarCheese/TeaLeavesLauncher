@@ -11,7 +11,7 @@ class MicrosoftAccount:
     user_hash: str
     mc_access_token: str
     uuid: str
-    name: str
+    username: str
     is_game_exist: bool
 
     def __init__(self):
@@ -37,7 +37,7 @@ class MicrosoftAccount:
         self.is_game_exist = self._check_game_exist()
         self.mc_profile = self._get_mc_profile().json()
         self.uuid = self.mc_profile["id"]  # 登录游戏必需参数
-        self.name = self.mc_profile["name"]  # 登录游戏必需参数
+        self.username = self.mc_profile["name"]  # 登录游戏必需参数
 
     def _get_authenticate(self):
         api_address = "https://login.live.com/oauth20_token.srf"

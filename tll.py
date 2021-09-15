@@ -78,7 +78,7 @@ def main():
     save_config(config)
     account = choose_account()
     mc_path, version = choose_game()
-    launcher = Launcher(mc_path, version, account.uuid, account.name, account.mc_access_token)
+    launcher = Launcher(mc_path, version, account.uuid, account.username, account.mc_access_token)
     launcher.launch_game()
 
 

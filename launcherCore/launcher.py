@@ -70,7 +70,7 @@ class Launcher:
             path = os.path.join(version_dir, i)
             if os.path.isfile(path):  # 判断是否为一个文件，排除文件夹
                 if os.path.splitext(path)[1] == ".json":  # 判断文件扩展名是否为“.json”
-                    json_list.append(f"{self.mc_path}\\versions\\" + os.path.splitext(i)[0] + "\\" + i)
+                    json_list.append(f"{self.mc_path}\\versions\\" + self.version + "\\" + i)
         modloader_json_path = []
         for i in json_list:
             with open(i, "r", encoding="utf8") as f:
@@ -120,9 +120,9 @@ class Launcher:
         if self.liteloader and self.forge:
             tweak_class = "--tweakClass com.mumfrey.liteloader.launch.LiteLoaderTweaker --tweakClass net.minecraftforge.fml.common.launcher.FMLTweaker "
         elif self.forge:
-            tweak_class = "--tweakClass net.minecraftforge.fml.common.launcher.FMLTweaker"
+            tweak_class = "--tweakClass net.minecraftforge.fml.common.launcher.FMLTweaker "
         elif self.liteloader:
-            tweak_class = "--tweakClass com.mumfrey.liteloader.launch.LiteLoaderTweaker"
+            tweak_class = "--tweakClass com.mumfrey.liteloader.launch.LiteLoaderTweaker "
         else:
             tweak_class = ""
         game_parameter = \
@@ -136,7 +136,7 @@ class Launcher:
 
     def _generate_launch_parameter(self):
         part_X = f"\"{self.java_path}\" -Xmx{self.max_memory}M -XX:+UseG1GC -XX:-UseAdaptiveSizePolicy -XX:-OmitStackTraceInFastThrow "
-        part_D = f"-Dminecraft.launcher.brand=tea-leaves-launcher -Dminecraft.launcher.version={self.launcher_version} -Djava.library.path={self.natives_folder_path} "
+        part_D = f"-Dminecraft.launcher.brand=tea-leaves-launcher -Dminecraft.launcher.version={self.launcher_version} -Djava.library.path=\"{self.natives_folder_path}\" "
         part_cp = self._generate_cp_parameter()
         part_game = self._generate_game_parameter()
         return part_X + part_D + part_cp + part_game
