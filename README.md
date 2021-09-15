@@ -7,7 +7,7 @@ A mc launcher based on python
 
 # 分支说明
 
-该分支仅用于开发使用
+该分支用于发布预览版
 
 # Todo List
 
@@ -21,9 +21,9 @@ A mc launcher based on python
     
 
 - [ ] 完整账户支持：
-    - [ ] 离线登陆
+    - [x] 离线登陆
     - [x] mojang 账户（ Yggdrasil ）
     - [x] 微软账户
-    - [ ] Authlib-injector
+    - [] Authlib-injector
     
 
