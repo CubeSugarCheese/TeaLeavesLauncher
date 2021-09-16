@@ -5,9 +5,6 @@
 
 A mc launcher based on python
 
-# 分支说明
-
-该分支用于发布预览版
 
 # Todo List
 
