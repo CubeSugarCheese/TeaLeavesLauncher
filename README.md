@@ -5,9 +5,9 @@
 
 A mc launcher based on python
 
-# 分支说明
-该分支用于提交正式版文件
+
 # Todo List
+
 - [ ] 支持导入整合包：
     - [ ] 解析整合包数据
     - [ ] 从 curseforge 下载 mod
@@ -18,9 +18,8 @@ A mc launcher based on python
     
 
 - [ ] 完整账户支持：
-    - [ ] 离线登陆
-    - [ ] mojang 账户（ Yggdrasil ）
-    - [ ] 微软账户
+    - [x] 离线登陆
+    - [x] mojang 账户（ Yggdrasil ）
+    - [x] 微软账户
     - [ ] Authlib-injector
     
-
