@@ -1,2 +1,2 @@
 requests
-pyyaml
+ruamel.yaml==0.16.12
