@@ -1,4 +1,4 @@
-default_config = """
+default_config = r"""
 clientToken:
 auto_generate_clientToken: true
 max_memory: 4096
