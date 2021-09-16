@@ -71,6 +71,21 @@ def choose_game():
     return path, version
 
 
+def choose_java():
+    print("请选择：")
+    print("【0】使用系统环境 Java")
+    java_paths = load_config()["java_path"]
+    if java_paths:
+        for i in java_paths:
+            print(f"【{java_paths.index(i) + 1}】{i}")
+    choice = int(input("选择："))
+    if choice == 0:
+        path = "java"
+    else:
+        path = java_paths[choice - 1]
+    return path
+
+
 def main():
     config = load_config()
     if config["clientToken"] is None and config["auto_generate_clientToken"]:
@@ -78,7 +93,8 @@ def main():
     save_config(config)
     account = choose_account()
     mc_path, version = choose_game()
-    launcher = Launcher(mc_path, version, account.uuid, account.username, account.mc_access_token)
+    java = choose_java()
+    launcher = Launcher(mc_path, version, account.uuid, account.username, account.mc_access_token, java_path=java)
     launcher.launch_game()
 
 
