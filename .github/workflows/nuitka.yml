@@ -1,0 +1,87 @@
+name: Nuitka build
+
+on:
+  pull_request:
+    branches: 
+      - main
+      - preview
+  push:
+    branches: 
+      - main
+      - preview
+
+jobs:
+#  linux:
+#    runs-on: ubuntu-latest
+#    steps:
+#    - uses: actions/checkout@dev
+#
+#    - name: Use Python 3.8.12
+#      uses: actions/setup-python@v1
+#      with:
+#        python-version: 3.8.12
+#
+#    - name: Install dependencies
+#      run: |
+#        pip install nuitka
+#
+#    - name: Build with nuitka
+#      run: python -m nuitka
+
+#  mac:
+#    runs-on: macOS-latest
+#    steps:
+#    - uses: actions/checkout@dev
+#
+#    - name: Install Python 3.8.12 using Conda
+#      run: |
+#        sudo chown -R $USER $CONDA
+#        $CONDA/bin/conda install python=3.8.12
+#
+#    - name: Install dependencies
+#      run: |
+#        pip install nuitka
+#
+#    - name: Build with nuitka
+#      run: python -m nuitka
+#      
+  windows:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Use Python 3.8
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+
+    - name: Install MinGW using Conda
+      shell: bash
+      run: $CONDA/Scripts/conda install m2w64-gcc libpython
+
+    - name: Install dependencies
+      shell: cmd
+      run: |
+        pip install nuitka 
+        pip install zstandard 
+        pip install -r requirements.txt
+    - name: Build with nuitka
+      shell: cmd
+      run: |
+        cd D:/a/TeaLeavesLauncher/TeaLeavesLauncher
+        python -m nuitka --mingw64 --standalone --output-dir=out --follow-imports --windows-icon-from-ico=icon.ico --onefile --linux-onefile-icon=icon.ico --include-module=ruamel.yaml --follow-import-to=launcherCore tll.py
+    
+    - name: Generate checksum files
+      shell: cmd
+      run: |
+        $(CertUtil -hashfile out/tll.exe sha256)[1] -replace " ","" > tll.exe.sha256
+        $(CertUtil -hashfile out/tll.exe sha1)[1] -replace " ","" > tll.exe.sha1
+      
+    - name: Upload artifact
+      uses: actions/upload-artifact@v2.1.4
+      with:
+        name: TLL
+        path: |
+          out/tll.exe
+          tll.exe.sha256
+          tll.exe.sha1
