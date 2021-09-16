@@ -70,7 +70,7 @@ jobs:
     - name: Build with nuitka
       shell: bash
       run: |
-        $CONDA/bin/python -m nuitka --mingw64 --standalone --output-dir=out --follow-imports --windows-icon-from-ico=icon.ico --onefile --linux-onefile-icon=icon.ico --include-module=ruamel.yaml --follow-import-to=launcherCore tll.py
+        $CONDA/Scirpts/python -m nuitka --mingw64 --standalone --output-dir=out --follow-imports --windows-icon-from-ico=icon.ico --onefile --linux-onefile-icon=icon.ico --include-module=ruamel.yaml --follow-import-to=launcherCore tll.py
     
     - name: Generate checksum files
       shell: cmd
