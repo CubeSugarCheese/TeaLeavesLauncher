@@ -9,6 +9,10 @@ A mc launcher based on python
 # Todo List
 
 - [ ] 自动补全游戏文件
+    - [ ] jar 文件
+    - [ ] natives 文件夹
+    - [ ] 原版 json 文件
+    - [ ] libraries 文件
 
 - [ ] 支持导入整合包：
     - [ ] 解析整合包数据
