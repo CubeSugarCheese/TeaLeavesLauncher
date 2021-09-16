@@ -65,7 +65,7 @@ jobs:
       run: |
         $CONDA/Scripts/conda install nuitka 
         $CONDA/Scripts/conda install zstandard 
-        $CONDA/Scripts/conda install -r requirements.txt
+        $CONDA/Scripts/conda install --file requirements.txt
 
     - name: Build with nuitka
       shell: cmd
