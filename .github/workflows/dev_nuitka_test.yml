@@ -62,9 +62,10 @@ jobs:
       run: |
         $CONDA/Scripts/conda install nuitka 
         $CONDA/Scripts/conda install zstandard 
-        $CONDA/Scripts/conda install -r requirements.txt
+        $CONDA/Scripts/conda install --filename requirements.txt
+
     - name: Build with nuitka
-      shell: cmd
+      shell: bash
       run: |
         cd D:/a/TeaLeavesLauncher/TeaLeavesLauncher
         $CONDA/Scripts/conda python -m nuitka --mingw64 --standalone --output-dir=out --follow-imports --windows-icon-from-ico=icon.ico --onefile --linux-onefile-icon=icon.ico --include-module=ruamel.yaml --follow-import-to=launcherCore tll.py
