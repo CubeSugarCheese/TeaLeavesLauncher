@@ -2,7 +2,7 @@
 import uuid
 import os
 
-from ruamel import yaml
+import ruamel.yaml as yaml
 
 from launcherCore.auth.mojangAuth import MojangAccount
 from launcherCore.auth.microsoftAuth import MicrosoftAccount
