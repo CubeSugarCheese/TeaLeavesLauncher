@@ -61,7 +61,7 @@ jobs:
       run: $CONDA/Scripts/conda install m2w64-gcc libpython
 
     - name: Install dependencies
-      shell: cmd
+      shell: bash
       run: |
         $CONDA/Scripts/conda install nuitka 
         $CONDA/Scripts/conda install zstandard 
