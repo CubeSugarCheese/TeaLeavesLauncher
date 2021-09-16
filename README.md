@@ -8,6 +8,12 @@ A mc launcher based on python
 
 # Todo List
 
+- [ ] 自动补全游戏文件
+    - [ ] jar 文件
+    - [ ] natives 文件夹
+    - [ ] 原版 json 文件
+    - [ ] libraries 文件
+
 - [ ] 支持导入整合包：
     - [ ] 解析整合包数据
     - [ ] 从 curseforge 下载 mod
@@ -15,11 +21,3 @@ A mc launcher based on python
     - [ ] 自动安装 ModLoader：
         - [ ] Forge
         - [ ] Fabric
-    
-
-- [ ] 完整账户支持：
-    - [x] 离线登陆
-    - [x] mojang 账户（ Yggdrasil ）
-    - [x] 微软账户
-    - [ ] Authlib-injector
-    
