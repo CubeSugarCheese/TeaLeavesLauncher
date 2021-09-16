@@ -17,5 +17,3 @@ A mc launcher based on python
     - [ ] 自动安装 ModLoader：
         - [ ] Forge
         - [ ] Fabric
-
-    
