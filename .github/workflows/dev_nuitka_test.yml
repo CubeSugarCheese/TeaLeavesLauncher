@@ -1,4 +1,4 @@
-name: Nuitka build
+name: dev Nuitka build
 
 on:
   pull_request:
