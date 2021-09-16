@@ -63,16 +63,13 @@ jobs:
     - name: Install dependencies
       shell: bash
       run: |
-        $CONDA/Scripts/conda install nuitka 
-        $CONDA/Scripts/conda install zstandard 
-        $CONDA/Scripts/conda install --file requirements.txt
+        pip install nuitka 
+        pip install zstandard 
+        pip install --file requirements.txt
 
     - name: Build with nuitka
       shell: bash
       run: |
-        $CONDA/Scripts/conda activate
-        $CONDA/Scripts/conda deactivate
-        $CONDA/Scripts/conda activate base
         nuitka --mingw64 --standalone --output-dir=out --follow-imports --windows-icon-from-ico=icon.ico --onefile --linux-onefile-icon=icon.ico --include-module=ruamel.yaml --follow-import-to=launcherCore tll.py
     
     - name: Generate checksum files
