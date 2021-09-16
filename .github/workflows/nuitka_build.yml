@@ -62,15 +62,15 @@ jobs:
     - name: Install dependencies
       shell: bash
       run: |
-        pip3 install nuitka 
-        pip3 install zstandard 
-        pip3 install -r requirements.txt
+        pip install nuitka 
+        pip install zstandard 
+        pip install -r requirements.txt
 
     - name: Build with nuitka
       shell: cmd
       run: |
         cd D:/a/TeaLeavesLauncher/TeaLeavesLauncher
-        python3 -m nuitka --mingw64 --standalone --output-dir=out --follow-imports --windows-icon-from-ico=icon.ico --onefile --linux-onefile-icon=icon.ico --include-module=ruamel.yaml --follow-import-to=launcherCore tll.py
+        python -m nuitka --mingw64 --standalone --output-dir=out --follow-imports --windows-icon-from-ico=icon.ico --onefile --linux-onefile-icon=icon.ico --include-module=ruamel.yaml --follow-import-to=launcherCore tll.py
     
     - name: Generate checksum files
       shell: cmd
