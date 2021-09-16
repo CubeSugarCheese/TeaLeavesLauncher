@@ -15,11 +15,4 @@ A mc launcher based on python
     - [ ] 自动安装 ModLoader：
         - [ ] Forge
         - [ ] Fabric
-    
 
-- [ ] 完整账户支持：
-    - [x] 离线登陆
-    - [x] mojang 账户（ Yggdrasil ）
-    - [x] 微软账户
-    - [ ] Authlib-injector
-    
