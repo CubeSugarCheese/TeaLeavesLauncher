@@ -7,7 +7,7 @@ A mc launcher based on python
 
 # 分支说明
 
-该分支仅用于开发使用
+该分支用于发布预览版
 
 # Todo List
 
@@ -26,4 +26,3 @@ A mc launcher based on python
     - [x] 微软账户
     - [ ] Authlib-injector
     
-
