@@ -1,15 +1,11 @@
-name: Nuitka build
+name: test build
 
 on:
+  workflow_dispatch:
   pull_request:
-    branches: 
-      - main
-      - preview
+    branches: [dev]
   push:
-    branches: 
-      - main
-      - preview
-    tags: 'v0.*.*-pre'
+    branches: [dev]
 
 jobs:
 #  linux:
@@ -56,25 +52,25 @@ jobs:
       with:
         python-version: 3.8
 
-    - name: Install MinGW using Conda
-      shell: bash
-      run: $CONDA/Scripts/conda install m2w64-gcc libpython
+    - name: Set up MinGW
+      uses: egor-tensin/setup-mingw@v2
+      with:
+        platform: x64
 
     - name: Install dependencies
       shell: cmd
       run: |
-        $CONDA/Scripts/conda install nuitka 
-        $CONDA/Scripts/conda install zstandard 
-        $CONDA/Scripts/conda install -r requirements.txt
-
+        pip install nuitka 
+        pip install zstandard 
+        pip install -r requirements.txt
     - name: Build with nuitka
       shell: cmd
       run: |
-        $CONDA/Scripts/conda activate base 
-        python -m nuitka --mingw64 --standalone --output-dir=out --follow-imports --windows-icon-from-ico=icon.ico --onefile --linux-onefile-icon=icon.ico --include-module=ruamel.yaml --follow-import-to=launcherCore tll.py
+        cd D:/a/TeaLeavesLauncher/TeaLeavesLauncher
+        python -m nuitka --mingw64 --standalone --assume-yes-for-downloads --output-dir=out --follow-imports --windows-icon-from-ico=icon.ico --onefile --linux-onefile-icon=icon.ico --include-module=ruamel.yaml --follow-import-to=launcherCore tll.py
     
     - name: Generate checksum files
-      shell: cmd
+      shell: powershell
       run: |
         $(CertUtil -hashfile out/tll.exe sha256)[1] -replace " ","" > tll.exe.sha256
         $(CertUtil -hashfile out/tll.exe sha1)[1] -replace " ","" > tll.exe.sha1

@@ -3,7 +3,7 @@
 <h1>TeaLeavesLauncher</h1>
 </div>
 
-A mc launcher based on python
+基于 Python 的 MC 启动器
 
 
 # Todo List
