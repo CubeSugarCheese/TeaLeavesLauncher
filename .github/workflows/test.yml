@@ -67,7 +67,7 @@ jobs:
       shell: cmd
       run: |
         cd D:/a/TeaLeavesLauncher/TeaLeavesLauncher
-        python -m nuitka --mingw64 --standalone --output-dir=out --follow-imports --windows-icon-from-ico=icon.ico --onefile --linux-onefile-icon=icon.ico --include-module=ruamel.yaml --follow-import-to=launcherCore tll.py
+        python -m nuitka --mingw64 --standalone --assume-yes-for-downloads --output-dir=out --follow-imports --windows-icon-from-ico=icon.ico --onefile --linux-onefile-icon=icon.ico --include-module=ruamel.yaml --follow-import-to=launcherCore tll.py
     
     - name: Generate checksum files
       shell: cmd
