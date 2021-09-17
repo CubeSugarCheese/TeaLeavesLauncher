@@ -70,7 +70,7 @@ jobs:
         python -m nuitka --mingw64 --standalone --assume-yes-for-downloads --output-dir=out --follow-imports --windows-icon-from-ico=icon.ico --onefile --linux-onefile-icon=icon.ico --include-module=ruamel.yaml --follow-import-to=launcherCore tll.py
     
     - name: Generate checksum files
-      shell: cmd
+      shell: powershell
       run: |
         $(CertUtil -hashfile out/tll.exe sha256)[1] -replace " ","" > tll.exe.sha256
         $(CertUtil -hashfile out/tll.exe sha1)[1] -replace " ","" > tll.exe.sha1
