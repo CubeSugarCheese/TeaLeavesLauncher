@@ -1,12 +1,15 @@
 # -*- coding:utf-8 -*-
+import sys
 import uuid
 import os
+import logging
 
 import ruamel.yaml as yaml
 
 from launcherCore.auth.mojangAuth import MojangAccount
 from launcherCore.auth.microsoftAuth import MicrosoftAccount
 from launcherCore.auth.offlineAuth import OfflineAccount
+from launcherCore.auth.authlibInjectorAuth import AuthlibInjectorAccount
 from launcherCore.launcher import Launcher
 
 config_path = f"{os.getcwd()}\\config.yml"
@@ -47,6 +50,9 @@ def choose_account():
         elif choice == 4:
             username = input("玩家名：")
             account = OfflineAccount(username)
+        else:
+            logging.error("未添加账户，请检查输入是否合法")
+            sys.exit(1)
         return account
 
 

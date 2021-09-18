@@ -129,3 +129,4 @@ dmypy.json
 .pyre/
 /launcherCore/logs/
 /config.yml
+/tll.exe

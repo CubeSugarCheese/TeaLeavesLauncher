@@ -163,4 +163,4 @@ class Launcher:
     def launch_game(self):
         cmd = self._generate_launch_parameter()
         import subprocess
-        subprocess.run(cmd)
+        subprocess.call(cmd, shell=True)
