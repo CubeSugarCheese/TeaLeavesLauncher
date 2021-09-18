@@ -1,5 +1,5 @@
 <div align="center">
-<img width="95" src="icon.png" alt="title">
+<img width="95" src="icon.ico" alt="title">
 <h1>TeaLeavesLauncher</h1>
 </div>
 
