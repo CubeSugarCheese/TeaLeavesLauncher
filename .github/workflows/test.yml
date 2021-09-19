@@ -11,12 +11,12 @@ jobs:
   linux:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@dev
+    - uses: actions/checkout@v2
 
     - name: Use Python 3.8.12
-      uses: actions/setup-python@v1
+      uses: actions/setup-python@v2
       with:
-        python-version: 3.8.12
+        python-version: 3.8
 
     - name: Install dependencies
       run: |
