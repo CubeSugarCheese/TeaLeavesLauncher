@@ -35,7 +35,7 @@ jobs:
       run: python -m nuitka --clang --standalone --assume-yes-for-downloads --output-dir=out --follow-imports --onefile --linux-onefile-icon=icon.ico --include-module=ruamel.yaml --follow-import-to=launcherCore tll.py -o tll.bin
     
     - name: Generate checksum files
-    - shell: bash
+      shell: bash
       run: |
         md5sum out/tll.bin > tll.bin.md5
         sha1sum out/tll.bin > tll.bin.sha1
@@ -54,23 +54,23 @@ jobs:
     runs-on: macOS-latest
     steps:
     - uses: actions/checkout@v2
-
+    
     - name: Use Python 3.8.12
       uses: actions/setup-python@v2
       with:
         python-version: 3.8
-
+    
     - name: Install dependencies
       run: |
         pip install nuitka
         pip install zstandard 
         pip install -r requirements.txt
-
+    
     - name: Build with nuitka
       run: python -m nuitka --standalone --assume-yes-for-downloads --output-dir=out --follow-imports --onefile --include-module=ruamel.yaml --follow-import-to=launcherCore tll.py -o tll.bin
       
     - name: Generate checksum files
-    - shell: bash
+      shell: bash
       run: |
         md5 out/tll.bin > tll.bin.md5
         shasum -a 1 out/tll.bin > tll.bin.sha1
