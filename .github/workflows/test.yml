@@ -32,14 +32,22 @@ jobs:
         pip install -r requirements.txt
 
     - name: Build with nuitka
-      run: python -m nuitka --clang --standalone --assume-yes-for-downloads --output-dir=out --follow-imports --onefile --linux-onefile-icon=icon.ico --include-module=ruamel.yaml --follow-import-to=launcherCore tll.py
+      run: python -m nuitka --clang --standalone --assume-yes-for-downloads --output-dir=out --follow-imports --onefile --linux-onefile-icon=icon.ico --include-module=ruamel.yaml --follow-import-to=launcherCore tll.py -o tll.bin
+    
+    - name: Generate checksum files
+    - shell: bash
+      run: |
+        md5sum out/tll.bin > tll.bin.md5
+        sha1sum out/tll.bin > tll.bin.sha1
     
     - name: Upload artifact
       uses: actions/upload-artifact@v2.1.4
       with:
         name: TLL
         path: |
-          out/tll
+          out/tll.bin
+          tll.bin.md5
+          tll.bin.sha1
 
 
   macOS:
@@ -59,14 +67,24 @@ jobs:
         pip install -r requirements.txt
 
     - name: Build with nuitka
-      run: python -m nuitka --standalone --assume-yes-for-downloads --output-dir=out --follow-imports --onefile --include-module=ruamel.yaml --follow-import-to=launcherCore tll.py
+      run: python -m nuitka --standalone --assume-yes-for-downloads --output-dir=out --follow-imports --onefile --include-module=ruamel.yaml --follow-import-to=launcherCore tll.py -o tll.bin
       
+    - name: Generate checksum files
+    - shell: bash
+      run: |
+        md5 out/tll.bin > tll.bin.md5
+        shasum -a 1 out/tll.bin > tll.bin.sha1
+        shasum -a 256 out/tll.bin > tll.bin.sha256
+    
     - name: Upload artifact
       uses: actions/upload-artifact@v2.1.4
       with:
         name: TLL
         path: |
-          out/tll
+          out/tll.bin
+          tll.bin.md5
+          tll.bin.sha1
+          tll.bin.sha255
       
   windows:
     runs-on: windows-latest
