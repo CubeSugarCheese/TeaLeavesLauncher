@@ -107,7 +107,7 @@ jobs:
       shell: cmd
       run: |
         pip install wheel
-        pip install -U "https://github.com/Nuitka/Nuitka/archive/develop.zip"
+        pip install nuitka
         pip install zstandard 
         pip install -r requirements.txt
 
