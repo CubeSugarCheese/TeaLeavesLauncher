@@ -43,7 +43,7 @@ jobs:
     - name: Upload artifact
       uses: actions/upload-artifact@v2.1.4
       with:
-        name: TLL
+        name: TLL_linux
         path: |
           out/tll.bin
           tll.bin.md5
@@ -79,7 +79,7 @@ jobs:
     - name: Upload artifact
       uses: actions/upload-artifact@v2.1.4
       with:
-        name: TLL
+        name: TLL_macOS
         path: |
           out/tll.bin
           tll.bin.md5
@@ -122,7 +122,7 @@ jobs:
     - name: Upload artifact
       uses: actions/upload-artifact@v2.1.4
       with:
-        name: TLL
+        name: TLL_win
         path: |
           out/tll.exe
           tll.exe.sha256
