@@ -32,7 +32,7 @@ jobs:
         pip install -r requirements.txt
 
     - name: Build with nuitka
-      run: python -m nuitka --clang --standalone --assume-yes-for-downloads --output-dir=out --follow-imports --onefile --linux-onefile-icon=icon.ico --include-module=ruamel.yaml --include-module=asyncio --follow-import-to=launcherCore tll.py
+      run: python -m nuitka --clang --standalone --assume-yes-for-downloads --output-dir=out --follow-imports --onefile --linux-onefile-icon=icon.ico --include-module=ruamel.yaml --follow-import-to=launcherCore tll.py
     
     - name: Upload artifact
       uses: actions/upload-artifact@v2.1.4
@@ -42,23 +42,38 @@ jobs:
           out/tll
 
 
-#  mac:
-#    runs-on: macOS-latest
-#    steps:
-#    - uses: actions/checkout@dev
-#
-#    - name: Install Python 3.8.12 using Conda
-#      run: |
-#        sudo chown -R $USER $CONDA
-#        $CONDA/bin/conda install python=3.8.12
-#
-#    - name: Install dependencies
-#      run: |
-#        pip install nuitka
-#
-#    - name: Build with nuitka
-#      run: python -m nuitka
-#      
+  macOS:
+    runs-on: macOS-latest
+    steps:
+    - uses: actions/checkout@dev
+
+    - name: Use Python 3.8.12
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+      
+      
+    - name: Set up MinGW
+      uses: egor-tensin/setup-mingw@v2
+      with:
+        platform: x64
+
+    - name: Install dependencies
+      run: |
+        pip install nuitka
+        pip install zstandard 
+        pip install -r requirements.txt
+
+    - name: Build with nuitka
+      run: python -m nuitka --mingw64 --standalone --assume-yes-for-downloads --output-dir=out --follow-imports --onefile --include-module=ruamel.yaml --follow-import-to=launcherCore tll.py
+      
+    - name: Upload artifact
+      uses: actions/upload-artifact@v2.1.4
+      with:
+        name: TLL
+        path: |
+          out/tll
+      
   windows:
     runs-on: windows-latest
     steps:
@@ -80,10 +95,11 @@ jobs:
         pip install nuitka 
         pip install zstandard 
         pip install -r requirements.txt
+
     - name: Build with nuitka
       shell: cmd
       run: |
-        python -m nuitka --mingw64 --standalone --assume-yes-for-downloads --output-dir=out --follow-imports --windows-icon-from-ico=icon.ico --onefile --linux-onefile-icon=icon.ico --include-module=ruamel.yaml --include-module=asyncio --follow-import-to=launcherCore tll.py
+        python -m nuitka --mingw64 --standalone --assume-yes-for-downloads --output-dir=out --follow-imports --windows-icon-from-ico=icon.ico --onefile --linux-onefile-icon=icon.ico --include-module=ruamel.yaml --follow-import-to=launcherCore tll.py
     
     - name: Generate checksum files
       shell: powershell
