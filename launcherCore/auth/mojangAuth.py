@@ -45,24 +45,22 @@ class MojangAccount:
         authenticate = self._get_authenticate()
         return json.loads(authenticate.text)["access_token"]
 
+    def _check_access_token_is_available(self):
+        api_address = "https://authserver.mojang.com/validate"  # 固定请求地址
+        headers = {"Content-Type": "application/json"}  # 固定请求头
+        if self.client_token is not None:
+            check_data = dict(accessToken=self.mc_accessToken, clientToken=self.client_token)
+        else:
+            check_data = dict(accessToken=self.access_token)
+        result = True if requests.post(url=api_address, data=json.dumps(check_data),
+                                       headers=headers).status_code == 200 else False
+        return result
 
-def check_access_token_is_available(access_token: str, *client_token: str):
-    api_address = "https://authserver.mojang.com/validate"  # 固定请求地址
-    headers = {"Content-Type": "application/json"}  # 固定请求头
-    if client_token is not None:
-        check_data = dict(accessToken=access_token, clientToken=client_token)
-    else:
-        check_data = dict(accessToken=access_token)
-    result = True if requests.post(url=api_address, data=json.dumps(check_data),
-                                   headers=headers).status_code == 200 else False
-    return result
-
-
-def refresh_access_token(access_token, client_token):
-    api_address = "https://authserver.mojang.com/refresh"  # 固定请求地址
-    headers = {"Content-Type": "application/json"}  # 固定请求头
-    refresh_data = dict(accessToken=access_token, clientToken=client_token)
-    return requests.post(url=api_address, data=json.dumps(refresh_data), headers=headers)
+    def refresh_access_token(self):
+        api_address = "https://authserver.mojang.com/refresh"  # 固定请求地址
+        headers = {"Content-Type": "application/json"}  # 固定请求头
+        refresh_data = dict(accessToken=self.access_token, clientToken=self.client_token)
+        return requests.post(url=api_address, data=json.dumps(refresh_data), headers=headers)
 
 
 if __name__ == '__main__':
