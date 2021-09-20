@@ -126,7 +126,7 @@ class Launcher:
         return jar_paths
 
     def _generate_cp_parameter(self):
-        cp_parameter = f"-cp \"{self._generate_vanilla_libraries_parameter()}{self._generate_modloader_libraries_parameter()}{self.mc_path}\\versions\\{self.version}\\{self.mc_version}.jar\" "
+        cp_parameter = f"-cp \"{self._generate_vanilla_libraries_parameter()}{self._generate_modloader_libraries_parameter()}{self.mc_path}\\versions\\{self.version}\\{self.version}.jar\" "
         return cp_parameter
 
     def _generate_game_parameter(self):
@@ -163,4 +163,4 @@ class Launcher:
     def launch_game(self):
         cmd = self._generate_launch_parameter()
         import subprocess
-        subprocess.call(cmd, shell=True)
+        subprocess.Popen(cmd)
