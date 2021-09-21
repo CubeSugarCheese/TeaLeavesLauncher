@@ -2,9 +2,10 @@ import asyncio
 import logging
 import os
 import platform
-import tqdm
+import zipfile
 
 import aiofiles
+import tqdm
 from aiohttp import ClientSession, connector
 
 mirror = {"mojang": {"launchermeta.mojang.com": "launchermeta.mojang.com",
@@ -51,6 +52,7 @@ class Downloader:
     # Linux Windows Darwin
     download_temp_folder: str
     natives_path: str
+    natives_system: str
 
     def __init__(self, mc_path, version, mc_version, src="mojang"):
         self.mc_path = mc_path
@@ -61,6 +63,12 @@ class Downloader:
         self.system = platform.system()
         self.download_temp_folder = f"{os.getcwd()}\\downloadTemp"
         self.natives_path = f"{self.mc_path}\\versions\\{self.version}\\natives"
+        if self.system == "Linux":
+            self.natives_system = "natives-linux"
+        elif self.system == "Windows":
+            self.natives_system = "natives-windows"
+        elif self.system == "Darwin":
+            self.natives_system = "natives-osx"
 
     async def fetch(self, session, url, file_path, pbar=None, headers=None):
         """
@@ -144,22 +152,29 @@ class Downloader:
         return natives_list
 
     async def download_natives(self):
-        if self.system == "Linux":
-            natives_system = "natives-linux"
-        elif self.system == "Windows":
-            natives_system = "natives-windows"
-        elif self.system == "Darwin":
-            natives_system = "natives-osx"
         for i in await self._get_natives_list():
-            if natives_system in i:
-                url = i[natives_system]["url"].replace("launchermeta.minecraft.net", mirror[self.src]['launchermeta.mojang.com'])
-                file_name = i[natives_system]["path"].replace("/", "\\")
+            if self.natives_system in i:
+                url = i[self.natives_system]["url"].replace("launchermeta.minecraft.net",
+                                                            mirror[self.src]['launchermeta.mojang.com'])
+                __, file_name = os.path.split(i[self.natives_system]["path"].replace("/", "\\"))
                 await self.async_download_from_url(url, file_name)
+
+    async def unzip_natives(self):
+        natives_zip_path_list = []
+        for i in await self._get_natives_list():
+            if self.natives_system in i:
+                __, file_name = os.path.split(i[self.natives_system]["path"].replace("/", "\\"))
+                natives_zip_path_list.append(f"{self.download_temp_folder}\\{file_name}")
+        if not os.path.exists(self.natives_path):
+            os.makedirs(self.natives_path)
+        for j in natives_zip_path_list:
+            file = zipfile.ZipFile(j, "r")
+            file.extractall(self.natives_path)
+            logging.info(f"成功解压 {j}")
 
 
 if __name__ == '__main__':
-    t = Downloader(mc_path=r"C:\Users\Daniel\Documents\MC\HMCL\.minecraft", version="1.12.2", mc_version="1.12.2", src="mojang")
+    t = Downloader(mc_path=r"C:\Users\Daniel\Documents\MC\HMCL\.minecraft", version="1.12.2", mc_version="1.12.2",
+                   src="mojang")
     loop = asyncio.get_event_loop()
-    loop.run_until_complete(t.download_natives())
-
-
+    loop.run_until_complete(t.unzip_natives())
