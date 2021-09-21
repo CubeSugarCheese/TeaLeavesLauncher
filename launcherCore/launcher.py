@@ -1,8 +1,11 @@
+import asyncio
 import json
+import logging
 import os
 import platform
 from launcherCore.utils.javaFinder import find_java_from_where
 from launcherCore.utils.modloaderFinder import ModloaderFinder
+from launcherCore.download import Downloader
 from launcherCore.utils import launcherInfo
 
 
@@ -58,13 +61,14 @@ class Launcher:
         self.fabric = ML_finder.isFabric()
 
     def _load_vanilla_json(self):
+        self._check_and_complete_game()
         with open(self.vanilla_json_path, "r", encoding="utf-8") as f:
             return json.loads(f.read())
 
     def _get_mc_version(self):
         if self.modloader_json_paths:
             with open(self.modloader_json_paths[0], "r", encoding="utf-8") as f:
-                mc_version = json.loads(f.read())["inheritsFrom"]
+                mc_version = json.load(f)["inheritsFrom"]
         else:
             with open(self._get_vanilla_json_path(), "r", encoding="utf-8") as f:
                 vanilla_json = json.loads(f.read())
@@ -77,10 +81,12 @@ class Launcher:
             path = os.path.join(version_dir, i)
             if os.path.isfile(path):  # 判断是否为一个文件，排除文件夹
                 if os.path.splitext(path)[1] == ".json":  # 判断文件扩展名是否为“.json”
-                    json_path = f"{self.mc_path}\\versions\\" + self.version + "\\" + i
+                    json_path = f"{self.mc_path}\\versions\\{self.version}\\{i}"
                     with open(json_path, "r", encoding="utf-8") as f:
                         if f.read().find("net.minecraft.client.main.Main") != -1:
                             return json_path
+                        else:
+                            return f"{version_dir}\\{self.version}\\{self.mc_version}.json"
 
     def _get_modloader_json_paths(self):
         version_dir = f"{self.mc_path}\\versions\\{self.version}"  # 文件夹名称
@@ -160,7 +166,20 @@ class Launcher:
         part_game = self._generate_game_parameter()
         return part_X + part_D + part_cp + part_game
 
+    def _check_and_complete_game(self):
+        download = Downloader(self.mc_path, self.version, self.mc_version, "mcbbs")
+        if not os.path.exists(self._get_vanilla_json_path()):
+            logging.warning("缺失版本json，开始自动补全")
+            asyncio.get_event_loop().run_until_complete(download.download_version_json())
+            logging.warning("版本json补全完成")
+        if not os.path.exists(self.natives_folder_path):
+            logging.WARNING("缺失natives，开始自动补全")
+            asyncio.get_event_loop().run_until_complete(download.download_natives())
+            asyncio.get_event_loop().run_until_complete(download.unzip_natives())
+            logging.warning("natives补全完成")
+
     def launch_game(self):
+        self._check_and_complete_game()
         cmd = self._generate_launch_parameter()
         import subprocess
         subprocess.Popen(cmd)

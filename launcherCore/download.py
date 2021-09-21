@@ -142,7 +142,7 @@ class Downloader:
         json = await self._get_version_json()
         file_path = f"{self.mc_path}/versions/{self.version}/{self.mc_version}.json"
         async with aiofiles.open(file_path, "w", encoding="utf-8") as f:
-            await json.dump(f)
+            await json.dump(json, f)
 
     async def _get_natives_list(self):
         natives_list = []
