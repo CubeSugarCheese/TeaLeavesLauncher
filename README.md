@@ -1,6 +1,7 @@
 <div align="center">
 <img width="95" src="icon.ico" alt="title">
 <h1>TeaLeavesLauncher</h1>
+    <a href="https://github.com/CubeSugarCheese/TeaLeavesLauncher/blob/master/LICENSE"><img src="https://img.shields.io/github/license/CubeSugarCheese/TeaLeavesLauncher?style=flat&color=900c3f" alt="License"></a>
 </div>
 
 基于 Python 的 MC 启动器
