@@ -2,6 +2,7 @@
 <img width="95" src="icon.ico" alt="title">
 <h1>TeaLeavesLauncher</h1>
     <a href="https://github.com/CubeSugarCheese/TeaLeavesLauncher/blob/master/LICENSE"><img src="https://img.shields.io/github/license/CubeSugarCheese/TeaLeavesLauncher?style=flat&color=900c3f" alt="License"></a>
+        <a href="https://github.com/CubeSugarCheese/TeaLeavesLauncher/actions/workflows/test.yml"><img src="https:/github.com/CubeSugarCheese/TeaLeavesLauncher/workflows/test%20build/badge.svg" alt="dev build status"></a>
 </div>
 
 基于 Python 的 MC 启动器
