@@ -1,17 +1,14 @@
+from base import BaseAccount
 import json
-
 import requests
 
 
-class MicrosoftAccount:
+class MicrosoftAccount(BaseAccount):
     auth_code: str
     access_token: str
     refresh_token: str
     xbox_token: str
     user_hash: str
-    mc_access_token: str
-    uuid: str
-    username: str
     is_game_exist: bool
 
     def __init__(self):

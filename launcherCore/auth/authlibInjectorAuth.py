@@ -1,14 +1,13 @@
+from base import BaseAccount
 import requests
 import json
 import logging
 
 
-class AuthlibInjectorAccount:
+class AuthlibInjectorAccount(BaseAccount):
     api_address: str
-    username: str  # 此处为邮箱或以外的账户标识
+    # username: str  # 此处为邮箱或以外的账户标识
     password: str
-    uuid: str
-    mc_access_token: str
 
     def __init__(self,
                  api_address,

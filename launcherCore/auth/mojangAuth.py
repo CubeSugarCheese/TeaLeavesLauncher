@@ -1,13 +1,11 @@
+from base import BaseAccount
 import json
-
 import requests
 
 
-class MojangAccount:
+class MojangAccount(BaseAccount):
     mc_accessToken: str
-    username: str
     password: str
-    uuid: str
     name: str
 
     def __init__(self, username: str, password: str, client_token: str = None):

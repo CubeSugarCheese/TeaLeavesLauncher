@@ -1,11 +1,9 @@
+from base import BaseAccount
 import uuid
-
 import requests
 
 
-class OfflineAccount:
-    username: str
-    uuid: str
+class OfflineAccount(BaseAccount):
 
     def __init__(self, username):
         self.username = username
