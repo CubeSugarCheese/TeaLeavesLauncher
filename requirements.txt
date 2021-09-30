@@ -3,3 +3,4 @@ ruamel.yaml==0.16.12
 aiohttp
 aiofiles
 tqdm
+loguru
