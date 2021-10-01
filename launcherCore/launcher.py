@@ -1,12 +1,12 @@
 import asyncio
 import json
-import logging
+from loguru import logger
 import os
 import platform
 from launcherCore.utils.javaFinder import find_java_from_where
 from launcherCore.utils.modloaderFinder import ModloaderFinder
 from launcherCore.download import Downloader
-from launcherCore.utils import launcherInfo
+from launcherCore.utils.static import launcher_version
 
 
 class Launcher:
@@ -54,7 +54,7 @@ class Launcher:
         self.vanilla_json_path = self._get_vanilla_json_path()
         self.natives_folder_path = f"{self.mc_path}\\versions\\{self.version}\\natives"
         self.asset_index = self._load_vanilla_json()["assetIndex"]["id"]
-        self.launcher_version = launcherInfo.launcher_version
+        self.launcher_version = launcher_version
         ML_finder = ModloaderFinder(self.modloader_json_paths)
         self.liteloader = ML_finder.isLiteloader()
         self.forge = ML_finder.isForge()
@@ -99,7 +99,7 @@ class Launcher:
         modloader_json_path = []
         for j in json_list:
             with open(j, "r", encoding="utf8") as f:
-                if "inheritsFrom" in json.loads(f.read()):
+                if "inheritsFrom" in json.load(f):
                     modloader_json_path.append(j)
         return modloader_json_path
 
@@ -169,17 +169,18 @@ class Launcher:
     def _check_and_complete_game(self):
         download = Downloader(self.mc_path, self.version, self.mc_version, "mcbbs")
         if not os.path.exists(self._get_vanilla_json_path()):
-            logging.warning("缺失版本json，开始自动补全")
+            logger.warning("缺失版本json，开始自动补全")
             asyncio.get_event_loop().run_until_complete(download.download_version_json())
-            logging.warning("版本json补全完成")
+            logger.warning("版本json补全完成")
         if not os.path.exists(self.natives_folder_path):
-            logging.WARNING("缺失natives，开始自动补全")
+            logger.warning("缺失natives，开始自动补全")
             asyncio.get_event_loop().run_until_complete(download.download_natives())
             asyncio.get_event_loop().run_until_complete(download.unzip_natives())
-            logging.warning("natives补全完成")
+            logger.warning("natives补全完成")
 
     def launch_game(self):
         self._check_and_complete_game()
         cmd = self._generate_launch_parameter()
         import subprocess
         subprocess.Popen(cmd)
+
