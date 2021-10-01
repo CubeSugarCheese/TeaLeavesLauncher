@@ -12,3 +12,4 @@ MC_paths:
 - C:\example\.minecraft
 # .minecraft 文件夹的完整路径
 """
+launcher_version = "0.1.0-pre"
