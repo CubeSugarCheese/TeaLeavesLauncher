@@ -1,6 +1,9 @@
-from base import BaseAccount
+# 内置模块
 import json
+# 第三方模块
 import requests
+# 本地模块
+from launcherCore.auth.baseAuth import BaseAccount
 
 
 class MojangAccount(BaseAccount):
@@ -49,7 +52,7 @@ class MojangAccount(BaseAccount):
         if self.client_token is not None:
             check_data = dict(accessToken=self.mc_accessToken, clientToken=self.client_token)
         else:
-            check_data = dict(accessToken=self.access_token)
+            check_data = dict(accessToken=self.mc_access_token)
         result = True if requests.post(url=api_address, data=json.dumps(check_data),
                                        headers=headers).status_code == 200 else False
         return result
@@ -57,7 +60,7 @@ class MojangAccount(BaseAccount):
     def refresh_access_token(self):
         api_address = "https://authserver.mojang.com/refresh"  # 固定请求地址
         headers = {"Content-Type": "application/json"}  # 固定请求头
-        refresh_data = dict(accessToken=self.access_token, clientToken=self.client_token)
+        refresh_data = dict(accessToken=self.mc_access_token, clientToken=self.client_token)
         return requests.post(url=api_address, data=json.dumps(refresh_data), headers=headers)
 
 

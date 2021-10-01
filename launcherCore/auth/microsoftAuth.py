@@ -1,6 +1,9 @@
-from base import BaseAccount
+# 内置模块
 import json
+# 第三方模块
 import requests
+# 本地模块
+from launcherCore.auth.baseAuth import BaseAccount
 
 
 class MicrosoftAccount(BaseAccount):
@@ -13,8 +16,7 @@ class MicrosoftAccount(BaseAccount):
 
     def __init__(self):
         print("请前往以下网址进行验证，并把重定向之后的网址粘贴回来")
-        print(
-            "https://login.live.com/oauth20_authorize.srf?client_id=00000000402b5328&response_type=code&scope=service%3A%3Auser.auth.xboxlive.com%3A%3AMBI_SSL&redirect_uri=https%3A%2F%2Flogin.live.com%2Foauth20_desktop.srf")
+        print("https://login.live.com/oauth20_authorize.srf?client_id=00000000402b5328&response_type=code&scope=service%3A%3Auser.auth.xboxlive.com%3A%3AMBI_SSL&redirect_uri=https%3A%2F%2Flogin.live.com%2Foauth20_desktop.srf")
         while True:
             redirect_url = input("重定向后的URL：")
             if redirect_url != "":

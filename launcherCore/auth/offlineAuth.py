@@ -1,6 +1,9 @@
-from base import BaseAccount
+# 内置模块
 import uuid
+# 第三方模块
 import requests
+# 本地模块
+from launcherCore.auth.baseAuth import BaseAccount
 
 
 class OfflineAccount(BaseAccount):

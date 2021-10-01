@@ -1,7 +1,11 @@
-from base import BaseAccount
-import requests
+# 内置模块
 import json
-import logging
+# 第三方模块
+import requests
+from loguru import logger
+# 本地模块
+from launcherCore.auth.baseAuth import BaseAccount
+from launcherCore.auth.exceptions import RefreshTokenError
 
 
 class AuthlibInjectorAccount(BaseAccount):
@@ -105,8 +109,6 @@ class AuthlibInjectorAccount(BaseAccount):
                 if response.status_code == 200:
                     token = response.json()["accessToken"]
                 else:
-                    logging.warning("登录凭据已失效，需要重新登录")
-                    self.username = input("账户：")
-                    self.password = input("密码：")
-                    token = self._get_authenticate().json()["accessToken"]
+                    logger.warning("登录凭据已失效，需要重新登录")
+                    raise RefreshTokenError
         return token
