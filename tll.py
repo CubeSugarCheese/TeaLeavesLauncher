@@ -2,31 +2,16 @@
 import sys
 import uuid
 import os
-import logging
-
-import ruamel.yaml as yaml
+from loguru import logger
 
 from launcherCore.auth.mojangAuth import MojangAccount
 from launcherCore.auth.microsoftAuth import MicrosoftAccount
 from launcherCore.auth.offlineAuth import OfflineAccount
 from launcherCore.auth.authlibInjectorAuth import AuthlibInjectorAccount
 from launcherCore.launcher import Launcher
+from launcherCore.appConfig import Config
 
-config_path = f"{os.getcwd()}\\config.yml"
-
-
-def save_config(data: dict):
-    with open(config_path, "w", encoding="utf-8") as f:
-        yaml.dump(data, f, Dumper=yaml.RoundTripDumper)
-
-
-def load_config():
-    if not os.path.exists(config_path):
-        from launcherCore.utils.static import default_config
-        with open(config_path, "w", encoding="utf-8") as f:
-            f.write(default_config)
-    with open(config_path, "r", encoding="utf-8") as g:
-        return yaml.load(g, Loader=yaml.Loader)
+config = Config()
 
 
 def choose_account():
@@ -46,12 +31,15 @@ def choose_account():
         elif choice == 2:
             account = MicrosoftAccount()
         elif choice == 3:
-            pass
+            url = input("外置登录服务器url：")
+            username = input("账户：")
+            password = input("密码：")
+            account = AuthlibInjectorAccount(url, username, password)
         elif choice == 4:
             username = input("玩家名：")
             account = OfflineAccount(username)
         else:
-            logging.error("未添加账户，请检查输入是否合法")
+            logger.error("未添加账户，请检查输入是否合法")
             sys.exit(1)
         return account
 
@@ -59,7 +47,7 @@ def choose_account():
 def choose_game():
     print("请选择：")
     print("【0】手动输入 .minecraft 文件夹路径")
-    mc_paths = load_config()["MC_paths"]
+    mc_paths = config["MC_paths"]
     if mc_paths:
         for i in mc_paths:
             print(f"【{mc_paths.index(i) + 1}】{i}")
@@ -80,7 +68,7 @@ def choose_game():
 def choose_java():
     print("请选择：")
     print("【0】使用系统环境 Java")
-    java_paths = load_config()["java_path"]
+    java_paths = config["java_path"]
     if java_paths:
         for i in java_paths:
             print(f"【{java_paths.index(i) + 1}】{i}")
@@ -93,10 +81,8 @@ def choose_java():
 
 
 def main():
-    config = load_config()
     if config["clientToken"] is None and config["auto_generate_clientToken"]:
         config["clientToken"] = uuid.uuid4().hex
-    save_config(config)
     account = choose_account()
     mc_path, version = choose_game()
     java = choose_java()
