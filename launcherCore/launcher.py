@@ -167,15 +167,15 @@ class Launcher:
         return part_X + part_D + part_cp + part_game
 
     def _check_and_complete_game(self):
-        download = Downloader(self.mc_path, self.version, self.mc_version, "mcbbs")
+        downloader = Downloader(self.mc_path, self.version, self.mc_version, "mcbbs")
         if not os.path.exists(self._get_vanilla_json_path()):
             logger.warning("缺失版本json，开始自动补全")
-            asyncio.get_event_loop().run_until_complete(download.download_version_json())
+            asyncio.get_event_loop().run_until_complete(downloader.download_version_json())
             logger.warning("版本json补全完成")
         if not os.path.exists(self.natives_folder_path):
             logger.warning("缺失natives，开始自动补全")
-            asyncio.get_event_loop().run_until_complete(download.download_natives())
-            asyncio.get_event_loop().run_until_complete(download.unzip_natives())
+            asyncio.get_event_loop().run_until_complete(downloader.download_natives())
+            asyncio.get_event_loop().run_until_complete(downloader.unzip_natives())
             logger.warning("natives补全完成")
 
     def launch_game(self):
