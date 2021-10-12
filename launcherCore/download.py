@@ -70,7 +70,8 @@ class Downloader:
         elif self.system == "Darwin":
             self.natives_system = "natives-osx"
 
-    async def fetch(self, session, url, file_path, pbar=None, headers=None):
+    @staticmethod
+    async def fetch(session, url, file_path, pbar=None, headers=None):
         """
         用于异步分块下载文件
         来自：https://github.com/cxapython/mp4download

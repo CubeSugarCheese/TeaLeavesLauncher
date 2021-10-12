@@ -4,8 +4,8 @@ import json
 import requests
 from loguru import logger
 # 本地模块
-from launcherCore.auth.baseAuth import BaseAccount
-from launcherCore.auth.exceptions import RefreshTokenError
+from .baseAuth import BaseAccount
+from .exceptions import RefreshTokenError
 
 
 class AuthlibInjectorAccount(BaseAccount):

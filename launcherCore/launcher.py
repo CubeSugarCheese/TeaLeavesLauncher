@@ -1,12 +1,15 @@
 import asyncio
 import json
-from loguru import logger
 import os
 import platform
-from launcherCore.utils.javaFinder import find_java_from_where
-from launcherCore.utils.modloaderFinder import ModloaderFinder
-from launcherCore.download import Downloader
-from launcherCore.utils.static import launcher_version
+import subprocess
+
+from loguru import logger
+
+from .utils.javaFinder import find_java_from_where
+from .utils.modloaderFinder import ModloaderFinder
+from .download import Downloader
+from .utils.static import launcher_version
 
 
 class Launcher:
@@ -181,6 +184,6 @@ class Launcher:
     def launch_game(self):
         self._check_and_complete_game()
         cmd = self._generate_launch_parameter()
-        import subprocess
-        subprocess.Popen(cmd)
-
+        logger.info("MC已启动")
+        logger.debug(cmd)
+        subprocess.Popen(cmd, creationflags=subprocess.CREATE_NEW_PROCESS_GROUP)
