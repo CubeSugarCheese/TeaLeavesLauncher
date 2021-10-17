@@ -8,7 +8,7 @@ from loguru import logger
 
 from .utils.javaFinder import find_java_from_where
 from .utils.modloaderFinder import ModloaderFinder
-from .download import Downloader
+from .download.download import Downloader
 from .utils.static import launcher_version
 
 
