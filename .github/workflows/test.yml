@@ -28,7 +28,7 @@ jobs:
     - name: Install dependencies
       run: |
         pip install wheel
-        pip install -U "https://github.com/Nuitka/Nuitka/archive/develop.zip"
+        pip install Nuitka
         pip install zstandard 
         pip install -r requirements.txt
 
@@ -64,7 +64,7 @@ jobs:
     - name: Install dependencies
       run: |
         pip install wheel
-        pip install -U "https://github.com/Nuitka/Nuitka/archive/develop.zip"
+        pip install Nuitka
         pip install zstandard 
         pip install -r requirements.txt
     
@@ -107,7 +107,7 @@ jobs:
       shell: cmd
       run: |
         pip install wheel
-        pip install nuitka
+        pip install Nuitka
         pip install zstandard 
         pip install -r requirements.txt
 
