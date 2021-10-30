@@ -22,8 +22,7 @@ class MicrosoftAccount(BaseAccount):
                 redirect_url = input("重定向后的URL：")
                 if redirect_url != "":
                     break
-            from urllib import parse
-            self.auth_code = parse.parse_qs(parse.urlparse(redirect_url).query)["code"][0]
+            self.auth_code = self.get_auth_code_from_url(redirect_url)
         else:
             self.auth_code = code
         self.auth_data = self._get_authenticate().json()
@@ -110,3 +109,8 @@ class MicrosoftAccount(BaseAccount):
         headers = {"Authorization": f"Bearer {self.mc_access_token}"}
         game_profile = requests.get(url=api_address, headers=headers)
         return game_profile
+
+    @staticmethod
+    def get_auth_code_from_url(redirect_url: str):
+        from urllib import parse
+        return parse.parse_qs(parse.urlparse(redirect_url).query)["code"][0]
