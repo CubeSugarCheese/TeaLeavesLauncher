@@ -14,6 +14,7 @@ from .download_souces import download_src
 from .exceptions import VersionNotFound
 
 path = Path()
+loop = asyncio.get_event_loop()
 MIRROR = Literal["mojang", "bmclapi", "mcbbs"]
 SYSTEM = Literal["Linux", "Windows", "Darwin"]
 
@@ -40,7 +41,7 @@ class Downloader:
         self.version = version
         self.mc_version = mc_version
         self.source = download_src[source]
-        self.version_json = asyncio.get_event_loop().run_until_complete(self._get_version_json())
+        self.version_json = loop.run_until_complete(self._get_version_json())
         self.download_temp_folder = Path.cwd() / "downloadTemp"
         self.natives_path = self.mc_path / "versions" / self.version / "natives"
         if platform.system() == "Linux":
@@ -60,8 +61,6 @@ class Downloader:
             try:
                 self.download_temp_folder.mkdir(parents=True)
             except FileExistsError:
-                pass
-            with file_path.open("w") as __:
                 pass
         first_byte = file_path.stat().st_size
         async with connector.TCPConnector(limit=300, force_close=True, enable_cleanup_closed=True) as tcp:
@@ -111,9 +110,9 @@ class Downloader:
         version_json = await self._get_version_json()
         file_path = self.mc_path / "versions" / self.version / f"{self.mc_version}.json"
         async with aiofiles.open(file_path, "w", encoding="utf-8") as f:
-            json.dump(version_json, f)
+            await f.write(json.dumps(version_json))
 
-    async def _get_natives_list(self):
+    def _get_natives_list(self):
         natives_list = []
         for i in self.version_json["libraries"]:
             if "classifiers" in i["downloads"]:
@@ -121,7 +120,7 @@ class Downloader:
         return natives_list
 
     async def download_natives(self):
-        for i in await self._get_natives_list():
+        for i in self._get_natives_list():
             if self.natives_system in i:
                 url = i[self.natives_system]["url"].replace("launchermeta.minecraft.net", self.source['launchermeta.mojang.com'])
                 file_name = Path(i[self.natives_system]["path"]).name
@@ -129,7 +128,7 @@ class Downloader:
 
     async def unzip_natives(self):
         natives_zip_path_list = []
-        for i in await self._get_natives_list():
+        for i in self._get_natives_list():
             if self.natives_system in i:
                 file_name = Path(i[self.natives_system]["path"]).name
                 natives_zip_path_list.append(self.download_temp_folder / file_name)
