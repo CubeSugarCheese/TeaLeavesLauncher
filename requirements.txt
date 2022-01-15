@@ -1,4 +1,5 @@
 requests
+httpx
 ruamel.yaml>=0.15
 aiohttp
 aiofiles

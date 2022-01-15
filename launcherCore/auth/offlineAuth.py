@@ -1,7 +1,7 @@
 # 内置模块
 import uuid
 # 第三方模块
-import requests
+import httpx
 # 本地模块
 from launcherCore.auth.baseAuth import BaseAccount
 
@@ -10,7 +10,7 @@ class OfflineAccount(BaseAccount):
 
     def __init__(self, username):
         self.username = username
-        data = requests.get(f"https://api.mojang.com/users/profiles/minecraft/{self.username}")
+        data = httpx.get(f"https://api.mojang.com/users/profiles/minecraft/{self.username}")
         if data.status_code != "200":
             self.uuid = uuid.uuid4().hex
         else:

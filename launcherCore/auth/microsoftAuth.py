@@ -1,7 +1,8 @@
 # 内置模块
 import json
 # 第三方模块
-import requests
+import httpx
+
 # 本地模块
 from launcherCore.auth.baseAuth import BaseAccount
 
@@ -47,7 +48,7 @@ class MicrosoftAccount(BaseAccount):
                          redirect_uri="https://login.live.com/oauth20_desktop.srf",
                          scope="service::user.auth.xboxlive.com::MBI_SSL"
                          )
-        return requests.post(url=api_address, data=auth_data, headers=headers)
+        return httpx.post(url=api_address, data=auth_data, headers=headers)
 
     def _refresh_authenticate(self):
         api_address = "https://login.live.com/oauth20_token.srf"
@@ -58,7 +59,7 @@ class MicrosoftAccount(BaseAccount):
                          grant_type="refresh_token",
                          redirect_uri="https://login.live.com/oauth20_desktop.srf",
                          )
-        return requests.post(url=api_address, data=auth_data, headers=headers)
+        return httpx.post(url=api_address, data=auth_data, headers=headers)
 
     def _auth_xbox_live(self):
         api_address = "https://user.auth.xboxlive.com/user/authenticate"
@@ -70,7 +71,7 @@ class MicrosoftAccount(BaseAccount):
             RelyingParty="http://auth.xboxlive.com",
             TokenType="JWT"
         )
-        xbox_data = requests.post(url=api_address, data=json.dumps(xbox_data), headers=headers)
+        xbox_data = httpx.post(url=api_address, data=xbox_data, headers=headers)
         return xbox_data
 
     def _get_xsts_authenticate(self):
@@ -82,20 +83,20 @@ class MicrosoftAccount(BaseAccount):
             RelyingParty="rp://api.minecraftservices.com/",
             TokenType="JWT"
         )
-        xsts_data = requests.post(url=api_address, data=json.dumps(xbox_data), headers=headers)
+        xsts_data = httpx.post(url=api_address, data=xbox_data, headers=headers)
         return xsts_data
 
     def _get_mc_authenticate(self):
         api_address = "https://api.minecraftservices.com/authentication/login_with_xbox"
         headers = {"Content-Type": "application/json"}
         mc_data = {"identityToken": f"XBL3.0 x={self.user_hash};{self.xsts_token}"}
-        mc_auth_data = requests.post(url=api_address, data=json.dumps(mc_data), headers=headers)
+        mc_auth_data = httpx.post(url=api_address, data=mc_data, headers=headers)
         return mc_auth_data
 
     def _check_game_exist(self):
         api_address = "https://api.minecraftservices.com/entitlements/mcstore"
         headers = {"Authorization": f"Bearer {self.mc_access_token}"}
-        game_exist_data = requests.get(url=api_address, headers=headers)
+        game_exist_data = httpx.get(url=api_address, headers=headers)
         if "items" not in game_exist_data.json():
             result = False
         else:
@@ -105,5 +106,5 @@ class MicrosoftAccount(BaseAccount):
     def _get_mc_profile(self):
         api_address = "https://api.minecraftservices.com/minecraft/profile"
         headers = {"Authorization": f"Bearer {self.mc_access_token}"}
-        game_profile = requests.get(url=api_address, headers=headers)
+        game_profile = httpx.get(url=api_address, headers=headers)
         return game_profile

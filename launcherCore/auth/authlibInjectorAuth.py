@@ -1,7 +1,7 @@
 # 内置模块
 import json
 # 第三方模块
-import requests
+import httpx
 from loguru import logger
 # 本地模块
 from launcherCore.auth.baseAuth import BaseAccount
@@ -39,7 +39,7 @@ class AuthlibInjectorAccount(BaseAccount):
             self.uuid = self.profile["id"]
 
     def _get_reality_api_address(self):
-        response = requests.get(self.api_address)
+        response = httpx.get(self.api_address)
         headers = response.headers
         if "x-authlib-injector-api-location" in headers:
             api_address = headers["x-authlib-injector-api-location"]
@@ -59,7 +59,7 @@ class AuthlibInjectorAccount(BaseAccount):
             data = dict(username=self.username,
                         password=self.password,
                         agent={"name": "Minecraft", "version": 1})
-        response = requests.post(address, data=json.dumps(data), headers=headers)
+        response = httpx.post(address, data=json.dumps(data), headers=headers)
         return response
 
     def _refresh_access_token(self):
@@ -70,7 +70,7 @@ class AuthlibInjectorAccount(BaseAccount):
                         clientToken=self.client_token)
         else:
             data = dict(accessToken=self.mc_access_token)
-        response = requests.post(address, data=data, headers=headers)
+        response = httpx.post(address, data=data, headers=headers)
         return response
 
     def _check_access_token_is_available(self):
@@ -81,7 +81,7 @@ class AuthlibInjectorAccount(BaseAccount):
                         clientToken=self.client_token)
         else:
             data = dict(accessToken=self.mc_access_token)
-        response = requests.post(address, data=data, headers=headers)
+        response = httpx.post(address, data=data, headers=headers)
         if response.status_code == 204:
             result = True
         else:

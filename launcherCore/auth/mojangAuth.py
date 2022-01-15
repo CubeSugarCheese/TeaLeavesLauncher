@@ -1,7 +1,7 @@
 # 内置模块
 import json
 # 第三方模块
-import requests
+import httpx
 # 本地模块
 from launcherCore.auth.baseAuth import BaseAccount
 
@@ -40,7 +40,7 @@ class MojangAccount(BaseAccount):
                              password=self.password,
                              requestUser=False)
 
-        return requests.post(url=api_address, data=json.dumps(auth_data), headers=headers)
+        return httpx.post(url=api_address, data=auth_data, headers=headers)
 
     def get_access_token(self):
         authenticate = self._get_authenticate()
@@ -53,15 +53,15 @@ class MojangAccount(BaseAccount):
             check_data = dict(accessToken=self.mc_accessToken, clientToken=self.client_token)
         else:
             check_data = dict(accessToken=self.mc_access_token)
-        result = True if requests.post(url=api_address, data=json.dumps(check_data),
-                                       headers=headers).status_code == 200 else False
+        result = True if httpx.post(url=api_address, data=check_data,
+                                    headers=headers).status_code == 200 else False
         return result
 
     def refresh_access_token(self):
         api_address = "https://authserver.mojang.com/refresh"  # 固定请求地址
         headers = {"Content-Type": "application/json"}  # 固定请求头
         refresh_data = dict(accessToken=self.mc_access_token, clientToken=self.client_token)
-        return requests.post(url=api_address, data=json.dumps(refresh_data), headers=headers)
+        return httpx.post(url=api_address, data=refresh_data, headers=headers)
 
 
 if __name__ == '__main__':
