@@ -9,7 +9,7 @@ from launcherCore.auth.microsoftAuth import MicrosoftAccount
 from launcherCore.auth.offlineAuth import OfflineAccount
 from launcherCore.auth.authlibInjectorAuth import AuthlibInjectorAccount
 from launcherCore.launcher import Launcher
-from launcherCore.appConfig import Config
+from launcherCore.config.appConfig import Config
 
 config = Config()
 

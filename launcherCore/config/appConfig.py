@@ -40,7 +40,7 @@ class Config(Singleton):
     def __init__(self):
         self.path = Path()
         # self.config_path = Path().cwd().joinpath("config.yml")
-        self.config_path = Path(r"C:\Users\Daniel\Desktop\TeaLeavesLauncher").joinpath("config.yml")
+        self.config_path = Path(r"/").joinpath("config.yml")
         if not Path.exists(self.config_path):
             logger.warning("未发现配置文件，已自动创建")
             self._output_default_config_yml()
