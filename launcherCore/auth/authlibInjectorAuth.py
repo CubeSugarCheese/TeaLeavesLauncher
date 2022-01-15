@@ -1,5 +1,3 @@
-# 内置模块
-import json
 # 第三方模块
 import httpx
 from loguru import logger
@@ -59,7 +57,7 @@ class AuthlibInjectorAccount(BaseAccount):
             data = dict(username=self.username,
                         password=self.password,
                         agent={"name": "Minecraft", "version": 1})
-        response = httpx.post(address, data=json.dumps(data), headers=headers)
+        response = httpx.post(address, data=data, headers=headers)
         return response
 
     def _refresh_access_token(self):
