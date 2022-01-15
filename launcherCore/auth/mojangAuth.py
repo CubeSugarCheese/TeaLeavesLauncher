@@ -3,7 +3,7 @@ import json
 # 第三方模块
 import httpx
 # 本地模块
-from launcherCore.auth.baseAuth import BaseAccount
+from .baseAuth import BaseAccount
 
 
 class MojangAccount(BaseAccount):

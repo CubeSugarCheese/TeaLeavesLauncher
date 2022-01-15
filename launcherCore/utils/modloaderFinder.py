@@ -1,6 +1,3 @@
-import os
-
-
 class ModloaderFinder:
     modloader_json_path: list
 

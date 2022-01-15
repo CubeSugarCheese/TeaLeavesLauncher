@@ -4,7 +4,7 @@ import json
 import httpx
 
 # 本地模块
-from launcherCore.auth.baseAuth import BaseAccount
+from .baseAuth import BaseAccount
 
 
 class MicrosoftAccount(BaseAccount):
@@ -15,15 +15,17 @@ class MicrosoftAccount(BaseAccount):
     user_hash: str
     is_game_exist: bool
 
-    def __init__(self):
-        print("请前往以下网址进行验证，并把重定向之后的网址粘贴回来")
-        print("https://login.live.com/oauth20_authorize.srf?client_id=00000000402b5328&response_type=code&scope=service%3A%3Auser.auth.xboxlive.com%3A%3AMBI_SSL&redirect_uri=https%3A%2F%2Flogin.live.com%2Foauth20_desktop.srf")
-        while True:
-            redirect_url = input("重定向后的URL：")
-            if redirect_url != "":
-                break
-        from urllib import parse
-        self.auth_code = parse.parse_qs(parse.urlparse(redirect_url).query)["code"][0]
+    def __init__(self, code: str = None):
+        if not code:
+            print("请前往以下网址进行验证，并把重定向之后的网址粘贴回来")
+            print("https://login.live.com/oauth20_authorize.srf?client_id=00000000402b5328&response_type=code&scope=service%3A%3Auser.auth.xboxlive.com%3A%3AMBI_SSL&redirect_uri=https%3A%2F%2Flogin.live.com%2Foauth20_desktop.srf")
+            while True:
+                redirect_url = input("重定向后的URL：")
+                if redirect_url != "":
+                    break
+            self.auth_code = self.get_auth_code_from_url(redirect_url)
+        else:
+            self.auth_code = code
         self.auth_data = self._get_authenticate().json()
         self.access_token = self.auth_data["access_token"]
         self.refresh_token = self.auth_data["refresh_token"]
@@ -108,3 +110,8 @@ class MicrosoftAccount(BaseAccount):
         headers = {"Authorization": f"Bearer {self.mc_access_token}"}
         game_profile = httpx.get(url=api_address, headers=headers)
         return game_profile
+
+    @staticmethod
+    def get_auth_code_from_url(redirect_url: str):
+        from urllib import parse
+        return parse.parse_qs(parse.urlparse(redirect_url).query)["code"][0]

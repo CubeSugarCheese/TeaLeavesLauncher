@@ -1,20 +1,24 @@
 import asyncio
 import json
-from loguru import logger
-import os
 import platform
-from launcherCore.utils.javaFinder import find_java_from_where
-from launcherCore.utils.modloaderFinder import ModloaderFinder
-from launcherCore.download import Downloader
-from launcherCore.utils.static import launcher_version
+import subprocess
+from pathlib import Path
+from typing import Optional
+
+from loguru import logger
+
+from .download.download import Downloader
+from .utils.javaFinder import find_java_from_where
+from .utils.modloaderFinder import ModloaderFinder
+from .utils.static import launcher_version
 
 
 class Launcher:
-    vanilla_json_path: str
-    natives_folder_path: str
+    vanilla_json_path: Path
+    natives_folder_path: Path
     max_memory: int
     java_path: str
-    mc_path: str
+    mc_path: Path
     version: str
     uuid: str
     name: str
@@ -30,29 +34,28 @@ class Launcher:
     fabric: bool
 
     def __init__(self,
-                 mc_path: str,
+                 mc_path: Optional[Path, str],
                  version: str,
                  uuid: str,
                  name: str,
-                 mc_access_token=None,
+                 mc_access_token,
                  java_path: str = find_java_from_where(),
                  max_memory=2048
                  ):
-        self.mc_path = mc_path
+        if type(mc_path) == str:
+            self.mc_path = Path(mc_path)
+        else:
+            self.mc_path = mc_path
         self.version = version
         self.uuid = uuid
         self.name = name
+        self.mc_access_token = mc_access_token
         self.java_path = java_path
         self.max_memory = max_memory
-        if mc_access_token is not None:
-            self.user_type = "Mojang"
-            self.mc_access_token = mc_access_token
-        else:
-            self.user_type = "Legacy"
         self.modloader_json_paths = self._get_modloader_json_paths()
         self.mc_version = self._get_mc_version()
         self.vanilla_json_path = self._get_vanilla_json_path()
-        self.natives_folder_path = f"{self.mc_path}\\versions\\{self.version}\\natives"
+        self.natives_folder_path = self.mc_path / "versions" / self.version / "natives"
         self.asset_index = self._load_vanilla_json()["assetIndex"]["id"]
         self.launcher_version = launcher_version
         ML_finder = ModloaderFinder(self.modloader_json_paths)
@@ -76,29 +79,19 @@ class Launcher:
         return mc_version
 
     def _get_vanilla_json_path(self):
-        version_dir = f"{self.mc_path}\\versions\\{self.version}"  # 文件夹名称
-        for i in os.listdir(version_dir):  # 遍历整个文件夹
-            path = os.path.join(version_dir, i)
-            if os.path.isfile(path):  # 判断是否为一个文件，排除文件夹
-                if os.path.splitext(path)[1] == ".json":  # 判断文件扩展名是否为“.json”
-                    json_path = f"{self.mc_path}\\versions\\{self.version}\\{i}"
-                    with open(json_path, "r", encoding="utf-8") as f:
-                        if f.read().find("net.minecraft.client.main.Main") != -1:
-                            return json_path
-                        else:
-                            return f"{version_dir}\\{self.version}\\{self.mc_version}.json"
+        version_dir = self.mc_path / "versions" / self.version  # 文件夹名称
+        for i in version_dir.glob("*.json"):  # 遍历所有扩展名为“.json”的文件
+            with i.open("r", encoding="utf-8") as f:
+                if f.read().find("net.minecraft.client.main.Main") != -1:
+                    return i
+        return version_dir / self.version / f"{self.mc_version}.json"
 
     def _get_modloader_json_paths(self):
-        version_dir = f"{self.mc_path}\\versions\\{self.version}"  # 文件夹名称
-        json_list = []
-        for i in os.listdir(version_dir):  # 遍历整个文件夹
-            path = os.path.join(version_dir, i)
-            if os.path.isfile(path):  # 判断是否为一个文件，排除文件夹
-                if os.path.splitext(path)[1] == ".json":  # 判断文件扩展名是否为“.json”
-                    json_list.append(f"{self.mc_path}\\versions\\" + self.version + "\\" + i)
+        version_dir = self.mc_path / "versions" / self.version  # 文件夹名称
+        json_list = version_dir.glob("*.json")
         modloader_json_path = []
         for j in json_list:
-            with open(j, "r", encoding="utf8") as f:
+            with open(j, "r", encoding="utf-8") as f:
                 if "inheritsFrom" in json.load(f):
                     modloader_json_path.append(j)
         return modloader_json_path
@@ -110,7 +103,7 @@ class Launcher:
                 libraries_parts = i["name"].split(":")
                 # "com.mojang:patchy:1.1" => ["com.mojang","patchy","1.1"]
                 libraries_parts_0 = libraries_parts[0].replace('.', '\\')
-                library_path = f"{self.mc_path}\\libraries\\{libraries_parts_0}\\{libraries_parts[1]}\\{libraries_parts[2]}\\{libraries_parts[1]}-{libraries_parts[2]}.jar"
+                library_path = self.mc_path/"libraries"/libraries_parts_0/libraries_parts[1]/libraries_parts[2]/f"{libraries_parts[1]}-{libraries_parts[2]}.jar"
                 if platform.system() == "Windows":
                     jar_paths += f"{library_path};"
                 else:
@@ -120,11 +113,11 @@ class Launcher:
     def _generate_modloader_libraries_parameter(self):
         jar_paths = ""
         for i in self.modloader_json_paths:
-            with open(i, "r", encoding="utf-8") as f:
+            with i.open("r", encoding="utf-8") as f:
                 for j in json.loads(f.read())["libraries"]:
                     libraries_parts = j["name"].split(":")
                     libraries_parts_0 = libraries_parts[0].replace('.', '\\')
-                    library_path = f"{self.mc_path}\\libraries\\{libraries_parts_0}\\{libraries_parts[1]}\\{libraries_parts[2]}\\{libraries_parts[1]}-{libraries_parts[2]}.jar"
+                    library_path = self.mc_path/"libraries"/libraries_parts_0/libraries_parts[1]/libraries_parts[2]/"{libraries_parts[1]}-{libraries_parts[2]}.jar"
                     if platform.system() == "Windows":
                         jar_paths += f"{library_path};"
                     else:
@@ -168,19 +161,20 @@ class Launcher:
 
     def _check_and_complete_game(self):
         downloader = Downloader(self.mc_path, self.version, self.mc_version, "mcbbs")
-        if not os.path.exists(self._get_vanilla_json_path()):
+        loop = asyncio.get_event_loop()
+        if not self._get_vanilla_json_path().exists():
             logger.warning("缺失版本json，开始自动补全")
-            asyncio.get_event_loop().run_until_complete(downloader.download_version_json())
+            loop.run_until_complete(downloader.download_version_json())
             logger.warning("版本json补全完成")
-        if not os.path.exists(self.natives_folder_path):
+        if not self.natives_folder_path.exists():
             logger.warning("缺失natives，开始自动补全")
-            asyncio.get_event_loop().run_until_complete(downloader.download_natives())
-            asyncio.get_event_loop().run_until_complete(downloader.unzip_natives())
+            loop.run_until_complete(downloader.download_natives())
+            loop.run_until_complete(downloader.unzip_natives())
             logger.warning("natives补全完成")
 
     def launch_game(self):
         self._check_and_complete_game()
         cmd = self._generate_launch_parameter()
-        import subprocess
-        subprocess.Popen(cmd)
-
+        logger.info("MC已启动")
+        logger.debug(cmd)
+        subprocess.Popen(cmd, creationflags=subprocess.CREATE_NEW_PROCESS_GROUP)
